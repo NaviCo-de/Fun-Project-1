@@ -40,6 +40,7 @@ data = [ #Mendeclare data yang isinya kumpulan pertanyaan dan pilihan
 
 if "p_index" not in st.session_state: #Menggunakan st.session_state karena jika hanya variabel biasa maka akan ter reset (Setiap ada interaksi user, streamlit membaca ulang dari atas)
     st.session_state.p_index = 0
+
 if "jawaban_user" not in st.session_state:
     st.session_state.jawaban_user = [None] * len(data) #Membuat list untuk menyimpan jawaban dari radio yang telah dijawab oleh user
 
@@ -50,11 +51,15 @@ index_sekarang = st.session_state.p_index
 pertanyaan_sekarang = data[index_sekarang] #Mengakses pertanyaan dari list data dengan index_sekarang
 
 st.subheader(f"Pertanyaan ke-{index_sekarang+1} dari {len(data)}")
+
 jawaban = st.radio( #Pilihan
     pertanyaan_sekarang["pertanyaan"], #Judul dari pertanyaan
     pertanyaan_sekarang["pilihan"], #Pilihan-pilihan yang tersedia, mengambil value dari key "pilihan"
-    index = pertanyaan_sekarang["pilihan"].index(st.session_state.jawaban_user[index_sekarang]) #Menyimpan jawaban user ketika next atau back pertanyaan
-    if st.session_state.jawaban_user[index_sekarang] in pertanyaan_sekarang["pilihan"] else 0,
+    index =0 if st.session_state.jawaban_user[index_sekarang] is None else (
+        pertanyaan_sekarang["pilihan"].index(st.session_state.jawaban_user[index_sekarang])
+        if st.session_state.jawaban_user[index_sekarang] in pertanyaan_sekarang["pilihan"]
+        else 0
+    ),
     key = f"radio_{index_sekarang}"
 )
 
